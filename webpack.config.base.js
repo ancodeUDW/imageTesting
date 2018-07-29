@@ -8,6 +8,9 @@ import fs from 'fs';
 import { dependencies as externals } from './app/package.json';
 import { dependencies as possibleExternals } from './package.json';
 
+let base_path = process.platform === 'win' || process.platform === 'win32' ? __dirname.substring(0, __dirname.lastIndexOf('\\') ) : __dirname.substring(0, __dirname.lastIndexOf('/'));
+
+
 // Find all the dependencies without a `main` property and add them as webpack externals
 function filterDepWithoutEntryPoints(dep: string): boolean {
   // Return true if we want to add a dependency to externals
@@ -60,7 +63,13 @@ export default {
    */
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
-    modules: [path.join(__dirname, 'app'), 'node_modules']
+    modules: [
+      path.resolve(__dirname, 'app'),
+      path.resolve('node_modules'),
+      // path.join(base_path, 'app/windowBrowser'),
+    // path.join(base_path, 'app/windowBrowser/utils'),
+    // path.join(base_path, 'app/windowUpdate'),
+    ],
   },
 
   plugins: [
